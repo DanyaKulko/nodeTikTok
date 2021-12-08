@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<form id="form">
+	<input type="text" id="url">
+	<input type="submit">
+</form>
+<div class="result_url" style="display: none">
+    <a target="_blank" class="videoUrl">Link</a><br>
+    <a target="_blank" class="audioUrl">Link</a>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script>
+	$("#form").on('submit', function (e) {
+		document.querySelector(".result_url a").setAttribute("href", "");
+		document.querySelector(".result_url a").innerText = "";
+		e.preventDefault();
+		let data = {
+			'video_url': $("#url").val()
+		}
+		$.ajax({
+			type: 'POST',
+			url : '/testing',
+			data: data,
+			dataType: "json",
+			success: function(data) {
+				if(data.success) {
+					$('.result_url').css('display', 'block');
+                    $(".result_url .videoUrl").html(data.videoLink);
+                    $(".result_url .videoUrl").attr('href', data.videoLink);
+                    $(".result_url .audioUrl").html(data.audioLink);
+                    $(".result_url .audioUrl").attr('href', data.audioLink);
+					// document.querySelector(".result_url a").setAttribute("href",data.success);
+					// document.querySelector(".result_url a").innerText = data.success;
+				} else
+					console.error("Error");
+
+			}
+		});
+
+
+	})
+</script>
+</body>
+</html>
